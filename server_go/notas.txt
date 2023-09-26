@@ -28,4 +28,4 @@ NOTA!
 
 sudo docker build -t victorcuches28/api_python .
 
-sudo docker run --rm -it -p 50000:5000 victorcuches28/api_python  
+sudo docker run --rm -it -p 5000:5000 victorcuches28/api_python  
