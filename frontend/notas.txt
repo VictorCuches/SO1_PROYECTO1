@@ -1,0 +1,9 @@
+
+#crear imagen de docker
+sudo docker build -t victorcuches28/proyecto_uno_frontend .
+
+#correr imagen 
+sudo docker run --rm -it -p 3000:3000 victorcuches28/proyecto_uno_frontend
+
+#subir imagen a docker hub
+sudo docker push victorcuches28/proyecto_uno_frontend

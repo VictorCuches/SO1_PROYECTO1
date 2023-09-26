@@ -1,0 +1,19 @@
+Instalar make 
+sudo apt install make
+
+- Para entrar a carpeta proc
+cd /proc/
+
+- Si hago un cambio en cpu.c tengo que liminar en /proc/ el creado 
+con sudo rmmod cpu.ko y hacer de nuevo 
+    make all 
+    sudo dmesg -c
+    sudo insmod cpu.ko
+revisar en proc el contenido con 
+    cat cpu_201807307
+luego regresar a la terminal del codigo 
+    sudo dmesg
+
+1. Hacer make all
+2. sudo dmesg -C # para limpiar lo que esta consola y mostrar lo que tiene el archivo
+3. sudo insmod cpu.ko # este archivo se va instalar en el kernel

@@ -1,0 +1,1 @@
+cmd_/home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/Module.symvers := sed 's/\.ko$$/\.o/' /home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/modules.order | scripts/mod/modpost -m -a  -o /home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/Module.symvers -e -i Module.symvers   -T -

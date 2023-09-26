@@ -1,0 +1,18 @@
+
+#crear imagen de docker
+sudo docker build -t victorcuches28/proyecto_uno_node .
+
+#correr imagen 
+sudo docker run --rm -it -p 5000:5000 --name node_server_container --network mi_red victorcuches28/proyecto_uno_node
+
+#subir imagen a docker hub
+sudo docker push victorcuches28/proyecto_uno_node
+
+
+
+# Crea una red Docker personalizada
+docker network create mi_red
+
+# Conecta los contenedores a la red personalizada
+docker network connect mi_red DB
+docker network connect mi_red node_server_container

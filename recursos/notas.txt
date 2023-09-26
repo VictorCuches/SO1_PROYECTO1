@@ -1,0 +1,21 @@
+-- Maquinas virtual GCP --
+1. Crear Plantilla de Instancia
+2. Crear Grupo de Instancia
+3. Abrir SSH y hacer las siguientes intalaciones:
+sudo apt install gcc
+sudo apt install git
+sudo apt install make
+sudo snap install goland --classic
+sudo snap install go –classic
+
+sudo apt-get install nodejs
+sudo apt install npm
+
+'instalar docker'
+sudo docker login
+sudo apt install docker-compose
+
+
+cuchau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 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
+
+git clone https://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@github.com/VictorCuches/SO1_PROYECTO1_2S2023_201807307.git

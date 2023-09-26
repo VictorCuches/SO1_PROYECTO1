@@ -1,0 +1,24 @@
+
+***** API go *****
+go get -u github.com/gofiber/fiber/v2/middleware/cors
+
+
+***** API en contenedor *****
+1. Crear archivo Dockerfile
+2. Ejecutar comando 
+sudo docker build -t victorcuches28/proyecto_uno .
+                    #usuario dh / nombre_dh
+
+3. sudo docker images # para ver la imagen que acabe de crear 
+4. sudo docker run --rm -it -p 8080:8080 victorcuches28/proyecto_uno #bash
+5. sudo docker ps # ver los contenedores que tengo corriendo
+6. sudo docker stop #id
+7. subir imagen a docker hub
+sudo docker push victorcuches28/proyecto_uno
+8. eliminar imagen 
+sudo docker rmi #id
+9. Para descargar una imagen de docker 
+sudo docker pull victorcuches28/proyecto_uno
+
+NOTA!
+- Revisar que cpu_201807307.ko y ram_201807307.ko se encuentren en /proc

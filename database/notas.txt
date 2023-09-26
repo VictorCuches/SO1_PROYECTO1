@@ -1,0 +1,34 @@
+
+
+#instalar mysql en docker
+docker pull mysql
+
+#ejecutar en segundo plano
+docker run -d -p 33061:3306 --name DB -e MYSQL_ROOT_PASSWORD=secret -v mysql-data:/var/lib/mysql mysql
+
+
+#network
+docker run -d -p 33061:3306 --name DB -e MYSQL_ROOT_PASSWORD=secret -v mysql-data:/var/lib/mysql --network mi_red mysql
+
+#ver contenedores corriendo
+docker ps
+
+#version de docker compose
+docker-compose -v
+
+docker-compose up
+
+
+#detener y eliminar contenedor
+docker stop DB_P12
+docker rm DB_P12
+
+
+#detener el servicio de mysql existente
+sudo service mysql stop
+
+#revisar uso del puerto
+sudo lsof -i :3306
+
+
+
