@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  backend_go:
+    image: 'victorcuches28/proyecto_uno'
+    container_name: "backend_go"
+    volumes: 
+      - type: bind
+        source: /proc
+        target: /proc
+    pid: host
+    restart: always
+    ports:
+      - "8080:8080"
+
+ 

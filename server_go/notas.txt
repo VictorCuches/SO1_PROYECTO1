@@ -11,7 +11,7 @@ sudo docker build -t victorcuches28/proyecto_uno .
 
 3. sudo docker images # para ver la imagen que acabe de crear 
 4. sudo docker run --rm -it -p 8080:8080 victorcuches28/proyecto_uno #bash
-sudo docker run --rm -it -p 8080:8080 -v /proc:/proc -d --restart=always --pid=host victorcuches28/proyecto_uno
+sudo docker run --rm -it -p 8080:8080 -v /proc:/proc --restart=always --pid=host victorcuches28/proyecto_uno
 
 5. sudo docker ps # ver los contenedores que tengo corriendo
 6. sudo docker stop #id
