@@ -23,4 +23,9 @@ sudo docker rmi #id
 sudo docker pull victorcuches28/proyecto_uno
 
 NOTA!
-- Revisar que cpu_201807307.ko y ram_201807307.ko se encuentren en /proc
+- Revisar que cpu_201807307.ko y ram_201807307.ko se encuentren en /
+
+
+sudo docker build -t victorcuches28/api_python .
+
+sudo docker run --rm -it -p 50000:5000 victorcuches28/api_python  

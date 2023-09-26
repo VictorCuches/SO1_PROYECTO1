@@ -8,8 +8,8 @@ WORKDIR /app
 COPY app.py /app
 
 # Instala las dependencias de tu aplicación (si las tienes en un archivo requirements.txt)
-# COPY requirements.txt /app
-# RUN pip install -r requirements.txt
+COPY requirements.txt /app
+RUN pip install -r requirements.txt
 
 # Expone el puerto en el que se ejecutará tu aplicación Flask
 EXPOSE 5000
