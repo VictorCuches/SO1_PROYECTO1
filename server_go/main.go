@@ -26,7 +26,6 @@ type datosCpu struct {
 	Porcentaje  []porcentaje
 }
 
-
 type procesos struct {
 	Pid    int32
 	Nombre string
@@ -115,7 +114,7 @@ func main() {
 		var requestBody RequestBody
 		if err := c.BodyParser(&requestBody); err != nil {
 			return c.Status(400).JSON(fiber.Map{
-				"state" : false,
+				"state": false,
 				"error": "Error al analizar el cuerpo JSON",
 			})
 		}
@@ -130,14 +129,14 @@ func main() {
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			return c.Status(500).JSON(fiber.Map{
-				"state" : false,
-				"error": fmt.Sprintf("Error al matar el proceso con PID %d", pidApp),
+				"state": false,
+				"error": fmt.Sprintf("Error al matar el proceso con PID %d: %s", pidApp, err.Error()),
 			})
 		}
 
 		// Mensaje de éxito
 		response := fiber.Map{
-			"state" : true,
+			"state":   true,
 			"message": fmt.Sprintf("Proceso con PID %d eliminado con éxito", string(out[:])),
 		}
 

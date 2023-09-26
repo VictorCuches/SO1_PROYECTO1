@@ -15,7 +15,6 @@ sudo apt install npm
 sudo docker login
 sudo apt install docker-compose
 
+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
 
-cuchau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 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
-
-git clone https://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@github.com/VictorCuches/SO1_PROYECTO1_2S2023_201807307.git
+git clone https://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@github.com/VictorCuches/SO1_PROYECTO1.git
