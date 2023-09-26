@@ -1,0 +1,27 @@
+# comandos en la instancia vm
+sudo apt update
+sudo apt upgrade
+
+# instalando python 
+python3 --version # ubuntu ya trae python instalando
+
+sudo apt install python3-pip
+
+pip3 install flask
+
+# creando la carpeta de la api
+mkdir api_sopes
+
+# creando archivo python 
+nano app.py
+
+python3 app.py &
+
+# ver procesos
+ps aux | grep python 
+
+# botar procesos
+kill -9 PID
+
+
+

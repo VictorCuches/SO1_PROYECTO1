@@ -13,4 +13,11 @@ services:
     ports:
       - "8080:8080"
 
+
+  backend_py:
+    image: 'victorcuches28/api_python'
+    container_name: "backend_py"
+    ports:
+      - "5000:5000"
+
  
