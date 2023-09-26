@@ -122,7 +122,7 @@ func main() {
 		// Obtiene el valor de pid_app de la estructura RequestBody
 		pidApp := requestBody.PidApp
 
-		command_kill := "sudo kill -9 " + fmt.Sprintf("%d", pidApp)
+		command_kill := "kill -9 " + fmt.Sprintf("%d", pidApp)
 		// Ejecuta el comando para matar el proceso con el PID especificado
 		cmd := exec.Command("sh", "-c", command_kill)
 
