@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/shirou/gopsutil/cpu"
 	"os/exec"
 	"strings"
 	"time"
@@ -113,6 +114,7 @@ func main() {
 		// Parsea el cuerpo JSON en una estructura RequestBody
 		var requestBody RequestBody
 		if err := c.BodyParser(&requestBody); err != nil {
+			fmt.Println("ERROR 1: ", err.Error())
 			return c.Status(400).JSON(fiber.Map{
 				"state": false,
 				"error": "Error al analizar el cuerpo JSON",
@@ -128,6 +130,7 @@ func main() {
 
 		out, err := cmd.CombinedOutput()
 		if err != nil {
+			fmt.Println("ERROR 2: ", err.Error())
 			return c.Status(500).JSON(fiber.Map{
 				"state": false,
 				"error": fmt.Sprintf("Error al matar el proceso con PID %d: %s", pidApp, err.Error()),
@@ -142,6 +145,25 @@ func main() {
 
 		// Devuelve el mensaje JSON como respuesta
 		return c.JSON(response)
+	})
+
+	app.Get("/cpu-usage", func(c *fiber.Ctx) error {
+		// Obtiene el porcentaje de utilización de la CPU durante 1 segundo
+		percent, err := cpu.Percent(1*time.Second, false)
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).SendString("Error al obtener la utilización de la CPU")
+		}
+
+		// El resultado es un slice con un valor por cada núcleo de CPU
+		// Puedes calcular el promedio o usar el valor de un núcleo específico según tus necesidades
+		averageUsage := 0.0
+		for _, p := range percent {
+			averageUsage += p
+		}
+		averageUsage /= float64(len(percent))
+
+		// Retorna el porcentaje de utilización de la CPU como JSON
+		return c.JSON(fiber.Map{"cpu_usage": averageUsage})
 	})
 
 	// Inicia el servidor en el puerto 8080

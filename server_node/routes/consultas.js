@@ -82,7 +82,7 @@ router.post('/killProcess', async (req, res) => {
 
         res.json(response.data);
     } catch (error) { 
-        console.error('Error al obtener datos killProcess:', error);
+        console.error('Error al obtener datos killProcess:', error.message);
         res.status(500).json({ error: 'Error al obtener datos' });
     }
 });
