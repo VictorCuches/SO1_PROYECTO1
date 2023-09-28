@@ -147,7 +147,8 @@ func main() {
 		return c.JSON(response)
 	})
 
-	app.Get("/cpu-usage", func(c *fiber.Ctx) error {
+	app.Get("/cpu_usage", func(c *fiber.Ctx) error {
+		fmt.Println("***** porcentaje uso cpu *****")
 		// Obtiene el porcentaje de utilización de la CPU durante 1 segundo
 		percent, err := cpu.Percent(1*time.Second, false)
 		if err != nil {
