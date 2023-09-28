@@ -70,15 +70,24 @@ router.get('/cpu_porcentaje', async (req, res) => {
     }
 });
 
-router.post('/killProcess', async (req, res) => {
-    const { pid_app } = req.body;
+router.get('/cpu_usage', async (req, res) => {
     try {
-        const response = await axios.post(`http://${API_GO_URL}:8080/killProcess`, { pid_app }, {
+        const response = await axios.get(`http://${API_GO_URL}:8080/cpu_usage`);
+        res.json(response.data);
+    } catch (error) { 
+        console.error('Error al obtener datos cpu_porcentaje:', error);
+        res.status(500).json({ error: 'Error al obtener datos' });
+    }
+});
+
+router.post('/killProcess', async (req, res) => {
+    const pid_App = req.body.pid_App;
+    try {
+        const response = await axios.post(`http://${API_GO_URL}:8080/killProcess`, { "pid_App": pid_App }, {
             headers: {
                 'Content-Type': 'application/json',
             },
         });
-        console.log(response.data)
 
         res.json(response.data);
     } catch (error) { 

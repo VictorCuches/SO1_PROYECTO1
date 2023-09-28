@@ -34,16 +34,22 @@ const RealTime = () => {
 
   const killProcess = async () => {
     console.log(textFilter, selectVM);
+    const body = {
+      "pid_App": parseInt(textFilter)
+    }
     try {
-      const response = await fetch(`http://34.122.241.35:8080/killProcess`, {
+      const response = await fetch(`${API_NODE_URL}/killProcess`, {
         method: "POST",
-        body: JSON.stringify({ PidApp: textFilter }),
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
       });
+
       if (!response.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
       const data = await response.json();
-      console.log(data);
       refresh();
     } catch (error) {
       console.log(error.message);
