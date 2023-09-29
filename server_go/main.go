@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/shirou/gopsutil/cpu"
+	"io/ioutil"
 	"os/exec"
 	"strings"
 	"time"
@@ -167,6 +168,19 @@ func main() {
 		return c.JSON(fiber.Map{"cpu_usage": averageUsage})
 	})
 
+	app.Get("/porcentaje_uso_cpu", func(c *fiber.Ctx) error {
+		cpuUsage, err := getCPUUsage()
+		if err != nil {
+			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err.Error(),
+			})
+		}
+
+		return c.JSON(fiber.Map{
+			"cpu_porcentaje": cpuUsage,
+		})
+	})
+
 	// Inicia el servidor en el puerto 8080
 	app.Listen(":8080")
 }
@@ -317,4 +331,38 @@ func useCpu() {
 
 func delaySecond(n time.Duration) {
 	time.Sleep(n * time.Second)
+}
+
+func getCPUUsage() (float64, error) {
+	content, err := ioutil.ReadFile("/proc/stat")
+	if err != nil {
+		return 0, err
+	}
+
+	statData := string(content)
+	lines := strings.Split(statData, "\n")
+
+	for _, line := range lines {
+		if strings.HasPrefix(line, "cpu ") {
+			fields := strings.Fields(line)
+			var user, nice, system, idle, iowait, irq, softirq, steal, guest, guestnice int
+			fmt.Sscanf(fields[1], "%d", &user)
+			fmt.Sscanf(fields[2], "%d", &nice)
+			fmt.Sscanf(fields[3], "%d", &system)
+			fmt.Sscanf(fields[4], "%d", &idle)
+			fmt.Sscanf(fields[5], "%d", &iowait)
+			fmt.Sscanf(fields[6], "%d", &irq)
+			fmt.Sscanf(fields[7], "%d", &softirq)
+			fmt.Sscanf(fields[8], "%d", &steal)
+			fmt.Sscanf(fields[9], "%d", &guest)
+			fmt.Sscanf(fields[10], "%d", &guestnice)
+
+			total := user + nice + system + idle + iowait + irq + softirq + steal
+			userCpu := user - guest + nice - guestnice
+			cpuUsage := float64(userCpu) / float64(total) * 100.0
+			return cpuUsage, nil
+		}
+	}
+
+	return 0, fmt.Errorf("No se pudo encontrar la línea 'cpu' en /proc/stat")
 }

@@ -114,11 +114,18 @@ static int getCpuInfo(struct seq_file *archivo, void *v) {
         seq_printf(archivo, "\t\"Nombre\":\"%s\",\n", procesos->comm);
         //----seq_printf(archivo, "\t\"Estado\":%li,\n", procesos->state);
         seq_printf(archivo, "\t\"Estado\":\"%s\",\n", get_procesos_state(procesos->__state));
-        seq_printf(archivo, "\t\"User\":%d,\n", procesos->cred->uid.val);
         
+        // seq_printf(archivo, "\t\"User\":%d,\n", procesos->cred->uid.val); ANTES
+        seq_printf(archivo, "\t\"User\":%d,\n", __kuid_val(procesos->real_cred->uid));
+
         // seq_printf(file, "      \"uid\" : %1i,\n", __kuid_val(process->real_cred->uid)); PROBAR ESTE!!
 
-        seq_printf(archivo, "\t\"Ram\":%d,\n", __kuid_val(procesos->real_cred->uid));
+        memo_ram = 0;
+        if (procesos->mm){
+            memo_ram = get_mm_rss(procesos->mm);
+        }
+
+        seq_printf(archivo, "\t\"Ram\":%d,\n", memo_ram);
         //----mm para el porcentaje de ram
         seq_printf(archivo, "\t\"Hijos\":[\n");
         
@@ -127,6 +134,7 @@ static int getCpuInfo(struct seq_file *archivo, void *v) {
             seq_printf(archivo, "\t\t{\n");
             seq_printf(archivo, "\t\t\"Pid\":%d,\n", sub_procesos->pid);
             seq_printf(archivo, "\t\t\"Nombre\":\"%s\"\n", sub_procesos->comm);
+            seq_printf(archivo, "\t\"Estado\":\"%s\",\n", get_procesos_state(sub_procesos->__state));
             seq_printf(archivo, "\t\t},\n");
         }
 
