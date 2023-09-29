@@ -106,27 +106,27 @@ router.post('/killProcess', async (req, res) => {
 router.post('/saveHistory', async (req, res) => {
     // console.log(req.body)
     const { ram, cpu, maquina } = req.body;
-    console.log(ram, cpu, maquina)
-    // try {
-    //     const connection = await connectToDatabase();
 
-    //     const [result] = await connection.execute(
-    //         'INSERT INTO monitoreo(fecha, ram, cpu, maquina) VALUES (NOW(), ?, ?, ?)',
-    //         [ram, cpu, maquina]
-    //     );
+    try {
+        const connection = await connectToDatabase();
 
-    //     if (result.affectedRows > 0) {
-    //         res.json({ message: 'Datos guardados con éxito' });
-    //     } else {
-    //         console.log('No se pudo insertar el registro en la base de datos.');
-    //         res.status(500).json({ error: 'No se pudo guardar el registro en la base de datos' });
-    //     }
+        const [result] = await connection.execute(
+            'INSERT INTO monitoreo(fecha, ram, cpu, maquina) VALUES (NOW(), ?, ?, ?)',
+            [ram, cpu, maquina]
+        );
 
-    //     connection.end();
-    // } catch (error) {
-    //     console.error('Error al guardar datos en la base de datos:', error);
-    //     res.status(500).json({ error: 'Error al guardar datos en la base de datos' });
-    // }
+        if (result.affectedRows > 0) {
+            res.json({ message: 'Datos guardados con éxito' });
+        } else {
+            console.log('No se pudo insertar el registro en la base de datos.');
+            res.status(500).json({ error: 'No se pudo guardar el registro en la base de datos' });
+        }
+
+        connection.end();
+    } catch (error) {
+        console.error('Error al guardar datos en la base de datos:', error);
+        res.status(500).json({ error: 'Error al guardar datos en la base de datos' });
+    }
 });
 
 

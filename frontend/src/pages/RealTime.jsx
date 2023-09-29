@@ -34,6 +34,7 @@ const RealTime = () => {
   };
 
   const loadDataGraphs = async () => {
+    console.log("loadDataGraphs",selectVM)
     try {
       const response_ram = await fetch(`${API_NODE_URL}/infoRam`);
       if (!response_ram.ok) {
@@ -55,6 +56,7 @@ const RealTime = () => {
         "cpu": data_cpu.cpu_porcentaje,
         "maquina": selectVM
       } 
+      console.log(body)
       const response_history = await fetch(`${API_NODE_URL}/saveHistory`, {
         method: "POST",
         headers: {
@@ -62,11 +64,12 @@ const RealTime = () => {
         },
         body: JSON.stringify(body),
       });
-
+      
       if (!response_history.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
       const data_history = await response_history.json(); 
+      console.log("Historial guardado")
  
     } catch (error) {
       console.log(error.message);
@@ -99,6 +102,7 @@ const RealTime = () => {
   const refresh = () => {
     setTextFilter("");
     loadProcessVM();
+    loadDataGraphs();
   };
 
   const onChangePID = (event) => {
@@ -112,7 +116,6 @@ const RealTime = () => {
 
   const handleSelectChange = (event) => {
     const valueSelect = event.target.value;
-    if(valueSelect === '') { return; }
     
     setSelectVM(valueSelect);
     refresh()
@@ -132,17 +135,14 @@ const RealTime = () => {
     // }
   };
 
-  useEffect(() => {
-    loadProcessVM();
-    loadDataGraphs();
-
+  useEffect(() => {   
     const intervalId = setInterval(() => { 
       console.log("Actualizando graficas")
       loadDataGraphs();
     }, 30000); // 20000 milisegundos = 20 segundos
    
     return () => clearInterval(intervalId);
-  }, []);
+  }, [selectVM]);
 
   return (
     <div className="container">
