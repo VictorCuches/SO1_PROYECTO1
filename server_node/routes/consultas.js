@@ -77,9 +77,9 @@ router.get('/cpu_porcentaje', async (req, res) => {
     }
 });
 
-router.get('/cpu_usage', async (req, res) => {
+router.get('/porcentaje_uso_cpu', async (req, res) => {
     try {
-        const response = await axios.get(`http://${API_GO_URL}:8080/cpu_usage`);
+        const response = await axios.get(`http://${API_GO_URL}:8080/porcentaje_uso_cpu`);
         res.json(response.data);
     } catch (error) { 
         console.error('Error al obtener datos cpu_porcentaje:', error);

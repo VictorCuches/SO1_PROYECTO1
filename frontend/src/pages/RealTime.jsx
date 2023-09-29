@@ -34,14 +34,13 @@ const RealTime = () => {
   };
 
   const loadDataGraphs = async () => {
-    console.log("loadDataGraphs")
     try {
       const response_ram = await fetch(`${API_NODE_URL}/infoRam`);
       if (!response_ram.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
 
-      const response_cpu = await fetch(`${API_NODE_URL}/cpu_porcentaje`);
+      const response_cpu = await fetch(`${API_NODE_URL}/porcentaje_uso_cpu`);
       if (!response_cpu.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
@@ -49,12 +48,11 @@ const RealTime = () => {
       const data_ram = await response_ram.json();
       const data_cpu = await response_cpu.json();
 
-      setPorcentajeGraph({cpu: data_cpu.sumaCPU, ram: data_ram.Porcentaje});
+      setPorcentajeGraph({cpu: data_cpu.cpu_porcentaje, ram: data_ram.Porcentaje});
 
-      console.log("selectVM",selectVM)
       const body = {
         "ram": data_ram.Porcentaje,
-        "cpu": data_cpu.sumaCPU,
+        "cpu": data_cpu.cpu_porcentaje,
         "maquina": selectVM
       } 
       const response_history = await fetch(`${API_NODE_URL}/saveHistory`, {
@@ -76,7 +74,6 @@ const RealTime = () => {
   }
 
   const killProcess = async () => {
-    console.log(textFilter, selectVM);
     const body = {
       "pid_App": parseInt(textFilter)
     }
@@ -101,7 +98,6 @@ const RealTime = () => {
 
   const refresh = () => {
     setTextFilter("");
-    loadDataGraphs();
     loadProcessVM();
   };
 
@@ -116,11 +112,9 @@ const RealTime = () => {
 
   const handleSelectChange = (event) => {
     const valueSelect = event.target.value;
-    console.log("valueSelect", valueSelect)
     if(valueSelect === '') { return; }
     
     setSelectVM(valueSelect);
-    console.log(selectVM);
     refresh()
   };
 

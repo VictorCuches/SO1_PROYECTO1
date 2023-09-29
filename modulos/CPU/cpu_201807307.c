@@ -136,8 +136,14 @@ static int getCpuInfo(struct seq_file *archivo, void *v) {
             sub_procesos=list_entry(subProcesos, struct task_struct, sibling);
             seq_printf(archivo, "\t\t{\n");
             seq_printf(archivo, "\t\t\"Pid\":%d,\n", sub_procesos->pid);
-            seq_printf(archivo, "\t\t\"Nombre\":\"%s\"\n", sub_procesos->comm);
+            seq_printf(archivo, "\t\t\"Nombre\":\"%s\",\n", sub_procesos->comm);
             seq_printf(archivo, "\t\"Estado\":\"%s\",\n", get_procesos_state(sub_procesos->__state));
+            memo_ram = 0;
+            if (sub_procesos->mm){
+                memo_ram = get_mm_rss(sub_procesos->mm);
+            }
+            seq_printf(archivo, "          \"Ram\": %lu\n", memo_ram);
+
             seq_printf(archivo, "\t\t},\n");
         }
 
