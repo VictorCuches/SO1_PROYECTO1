@@ -62,8 +62,15 @@ router.get('/infoCpu', async (req, res) => {
 
 router.get('/cpu_porcentaje', async (req, res) => {
     try {
-        const response = await axios.get(`http://${API_GO_URL}:8080/cpu_porcentaje`);
-        res.json(response.data);
+        const response = await axios.get(`http://${API_GO_URL}:8080/cpu_porcentaje`);        
+        const arregloPorcentaje = response.data.porcentajeCPU
+            .replace(/\[|\]|\s/g, "")
+            .split(",")
+            .map(Number);
+
+        const sumaCPU = arregloPorcentaje.reduce((acumulador, valorActual) => acumulador + valorActual, 0);
+        res.json({ sumaCPU : sumaCPU }); 
+
     } catch (error) { 
         console.error('Error al obtener datos cpu_porcentaje:', error);
         res.status(500).json({ error: 'Error al obtener datos' });
@@ -97,27 +104,29 @@ router.post('/killProcess', async (req, res) => {
 });
 
 router.post('/saveHistory', async (req, res) => {
+    // console.log(req.body)
     const { ram, cpu, maquina } = req.body;
-    try {
-        const connection = await connectToDatabase();
+    console.log(ram, cpu, maquina)
+    // try {
+    //     const connection = await connectToDatabase();
 
-        const [result] = await connection.execute(
-            'INSERT INTO monitoreo(fecha, ram, cpu, maquina) VALUES (NOW(), ?, ?, ?)',
-            [ram, cpu, maquina]
-        );
+    //     const [result] = await connection.execute(
+    //         'INSERT INTO monitoreo(fecha, ram, cpu, maquina) VALUES (NOW(), ?, ?, ?)',
+    //         [ram, cpu, maquina]
+    //     );
 
-        if (result.affectedRows > 0) {
-            res.json({ message: 'Datos guardados con éxito' });
-        } else {
-            console.log('No se pudo insertar el registro en la base de datos.');
-            res.status(500).json({ error: 'No se pudo guardar el registro en la base de datos' });
-        }
+    //     if (result.affectedRows > 0) {
+    //         res.json({ message: 'Datos guardados con éxito' });
+    //     } else {
+    //         console.log('No se pudo insertar el registro en la base de datos.');
+    //         res.status(500).json({ error: 'No se pudo guardar el registro en la base de datos' });
+    //     }
 
-        connection.end();
-    } catch (error) {
-        console.error('Error al guardar datos en la base de datos:', error);
-        res.status(500).json({ error: 'Error al guardar datos en la base de datos' });
-    }
+    //     connection.end();
+    // } catch (error) {
+    //     console.error('Error al guardar datos en la base de datos:', error);
+    //     res.status(500).json({ error: 'Error al guardar datos en la base de datos' });
+    // }
 });
 
 

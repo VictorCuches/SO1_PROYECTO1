@@ -6,6 +6,7 @@ import "bootstrap-icons/font/bootstrap-icons.css"; // Importa el archivo CSS de 
 
 const RealTime = () => {
   const [processVM, setProcessVM] = useState([]);
+  const [porcentajeGraph, setPorcentajeGraph] = useState({cpu:0, ram: 0});
   const [textFilter, setTextFilter] = useState("");
   const [selectVM, setSelectVM] = useState("");
 
@@ -31,6 +32,48 @@ const RealTime = () => {
       console.log(error.message);
     }
   };
+
+  const loadDataGraphs = async () => {
+    console.log("loadDataGraphs")
+    try {
+      const response_ram = await fetch(`${API_NODE_URL}/infoRam`);
+      if (!response_ram.ok) {
+        throw new Error("No se pudo obtener la respuesta de la API.");
+      }
+
+      const response_cpu = await fetch(`${API_NODE_URL}/cpu_porcentaje`);
+      if (!response_cpu.ok) {
+        throw new Error("No se pudo obtener la respuesta de la API.");
+      }
+
+      const data_ram = await response_ram.json();
+      const data_cpu = await response_cpu.json();
+
+      setPorcentajeGraph({cpu: data_cpu.sumaCPU, ram: data_ram.Porcentaje});
+
+      console.log("selectVM",selectVM)
+      const body = {
+        "ram": data_ram.Porcentaje,
+        "cpu": data_cpu.sumaCPU,
+        "maquina": selectVM
+      } 
+      const response_history = await fetch(`${API_NODE_URL}/saveHistory`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response_history.ok) {
+        throw new Error("No se pudo obtener la respuesta de la API.");
+      }
+      const data_history = await response_history.json(); 
+ 
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 
   const killProcess = async () => {
     console.log(textFilter, selectVM);
@@ -58,6 +101,7 @@ const RealTime = () => {
 
   const refresh = () => {
     setTextFilter("");
+    loadDataGraphs();
     loadProcessVM();
   };
 
@@ -72,24 +116,38 @@ const RealTime = () => {
 
   const handleSelectChange = (event) => {
     const valueSelect = event.target.value;
+    console.log("valueSelect", valueSelect)
+    if(valueSelect === '') { return; }
+    
     setSelectVM(valueSelect);
+    console.log(selectVM);
+    refresh()
   };
 
   const prueba = async () => {
-    try {
-      const response = await fetch(`${API_NODE_URL}/prueba`);
-      if (!response.ok) {
-        throw new Error("No se pudo obtener la respuesta de la API.");
-      }
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.log(error.message);
-    }
+    console.log(selectVM)
+    // try {
+    //   const response = await fetch(`${API_NODE_URL}/prueba`);
+    //   if (!response.ok) {
+    //     throw new Error("No se pudo obtener la respuesta de la API.");
+    //   }
+    //   const data = await response.json();
+    //   console.log(data);
+    // } catch (error) {
+    //   console.log(error.message);
+    // }
   };
 
   useEffect(() => {
     loadProcessVM();
+    loadDataGraphs();
+
+    const intervalId = setInterval(() => { 
+      console.log("Actualizando graficas")
+      loadDataGraphs();
+    }, 30000); // 20000 milisegundos = 20 segundos
+   
+    return () => clearInterval(intervalId);
   }, []);
 
   return (
@@ -126,7 +184,7 @@ const RealTime = () => {
                 <button className="btn btn-primary ml-2" onClick={refresh}>
                   <i className="bi bi-arrow-clockwise"></i>
                 </button>
-                <button className="btn btn-secondary ml-2">
+                <button className="btn btn-secondary ml-2" onClick={prueba}>
                   <i className="bi bi-question"></i>
                 </button>
               </div>
@@ -141,8 +199,8 @@ const RealTime = () => {
         <div className="col-3">
           <div className="card shadow-lg mb-5 bg-white rounded">
             <div className="card-body">
-              <GraphPie title="Porcentaje de uso de RAM" usageValue={65}/>
-              <GraphPie title="Porcentaje de uso de CPU" usageValue={25}/>
+              <GraphPie title="Porcentaje de uso de RAM" usageValue={porcentajeGraph.ram}/>
+              <GraphPie title="Porcentaje de uso de CPU" usageValue={porcentajeGraph.cpu}/>
             </div>
           </div>
         </div>
