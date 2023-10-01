@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-const GraphLine = ({title, color}) => {
+const GraphLine = ({title, color, dates, dataHistory}) => {
     const options = {
         responsive: true,
         plugins: {
@@ -35,14 +35,14 @@ const GraphLine = ({title, color}) => {
         },
       };
 
-      const labels = ['January', 'February', 'March', 'April', 'May', 'June', 'July'];
+      const labels = dates;
 
       const data = {
         labels,
         datasets: [
           {
             label: 'Dataset 1',
-            data: [1,2,3,4,5,6,7,8,9,10,11,12],
+            data: dataHistory,
             borderColor: color,
             backgroundColor: color,
           }, 

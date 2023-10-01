@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Table from "../components/TableData.jsx";
 import GraphPie from "../components/GraphPie";
-import "bootstrap-icons/font/bootstrap-icons.css"; // Importa el archivo CSS de Bootstrap Icons
-
+import "bootstrap-icons/font/bootstrap-icons.css"; 
 const RealTime = () => {
   const [processVM, setProcessVM] = useState([]);
   const [porcentajeGraph, setPorcentajeGraph] = useState({cpu:0, ram: 0});
   const [textFilter, setTextFilter] = useState("");
-  const [selectVM, setSelectVM] = useState("");
+  const [selectVM, setSelectVM] = useState("VM1"); 
 
   const listVM = [
     { value: "VM1", label: "Maquina Virtual 1" },
@@ -20,8 +19,10 @@ const RealTime = () => {
   const API_NODE_URL = process.env.REACT_APP_API_URL;
 
   const loadProcessVM = async () => {
+    console.log("REACT: loadProcessVM")
+
     try {
-      const response = await fetch(`${API_NODE_URL}/infoCpu`);
+      const response = await fetch(`${API_NODE_URL}/infoCpu/${selectVM}`);
       if (!response.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
@@ -34,14 +35,14 @@ const RealTime = () => {
   };
 
   const loadDataGraphs = async () => {
-    console.log("loadDataGraphs",selectVM)
+    console.log("REACT: loadDataGraphs")
     try {
-      const response_ram = await fetch(`${API_NODE_URL}/infoRam`);
+      const response_ram = await fetch(`${API_NODE_URL}/infoRam/${selectVM}`);
       if (!response_ram.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
 
-      const response_cpu = await fetch(`${API_NODE_URL}/porcentaje_uso_cpu`);
+      const response_cpu = await fetch(`${API_NODE_URL}/porcentaje_uso_cpu/${selectVM}`);
       if (!response_cpu.ok) {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
@@ -56,7 +57,6 @@ const RealTime = () => {
         "cpu": data_cpu.cpu_porcentaje,
         "maquina": selectVM
       } 
-      console.log(body)
       const response_history = await fetch(`${API_NODE_URL}/saveHistory`, {
         method: "POST",
         headers: {
@@ -77,8 +77,11 @@ const RealTime = () => {
   }
 
   const killProcess = async () => {
+    console.log("REACT: killProcess")
+
     const body = {
-      "pid_App": parseInt(textFilter)
+      "pid_App": parseInt(textFilter),
+      "maquina": selectVM
     }
     try {
       const response = await fetch(`${API_NODE_URL}/killProcess`, {
@@ -93,6 +96,7 @@ const RealTime = () => {
         throw new Error("No se pudo obtener la respuesta de la API.");
       }
       const data = await response.json();
+      
       refresh();
     } catch (error) {
       console.log(error.message);
@@ -123,23 +127,16 @@ const RealTime = () => {
 
   const prueba = async () => {
     console.log(selectVM)
-    // try {
-    //   const response = await fetch(`${API_NODE_URL}/prueba`);
-    //   if (!response.ok) {
-    //     throw new Error("No se pudo obtener la respuesta de la API.");
-    //   }
-    //   const data = await response.json();
-    //   console.log(data);
-    // } catch (error) {
-    //   console.log(error.message);
-    // }
+    console.log(porcentajeGraph)
   };
 
   useEffect(() => {   
+    loadProcessVM();
+    loadDataGraphs();
     const intervalId = setInterval(() => { 
-      console.log("Actualizando graficas")
+      console.log("REACT: Actualizando graficas")
       loadDataGraphs();
-    }, 30000); // 20000 milisegundos = 20 segundos
+    }, 30000);
    
     return () => clearInterval(intervalId);
   }, [selectVM]);
@@ -156,7 +153,7 @@ const RealTime = () => {
                 onChange={handleSelectChange}
                 className="my-4"
               >
-                <option>Seleccione maquina virtual</option>
+                {/* <option>Seleccione maquina virtual</option> */}
                 {listVM.map((item) => (
                   <option key={item.value} value={item.value}>
                     {item.label}

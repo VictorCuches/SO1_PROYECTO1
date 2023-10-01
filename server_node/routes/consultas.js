@@ -17,6 +17,13 @@ const dbConfig = {
     database: MYSQLDB_DATABASE,
 };
 
+const ipServidores = {
+    'VM1' : process.env.API_GO_URL,
+    'VM2' : process.env.API_GO_URL_VM2,
+    'VM3' : process.env.API_GO_URL_VM2,
+    'VM4' : process.env.API_GO_URL_VM2,
+}
+
 // Función para conectar a la base de datos
 async function connectToDatabase() {
     try {
@@ -40,9 +47,13 @@ router.get('/prueba', async (req, res) => {
     }
 });
 
-router.get('/infoRam', async (req, res) => {
+router.get('/infoRam/:maquina', async (req, res) => {
+    const maquina = req.params.maquina;
+    const IP_API_GO = await ipServidores[maquina];
+    
+    console.log(`NODE: infoRam ${maquina} `)
     try {
-        const response = await axios.get(`http://${API_GO_URL}:8080/infoRam`);
+        const response = await axios.get(`http://${IP_API_GO}:8080/infoRam`);
         res.json(response.data);
     } catch (error) { 
         console.error('Error al obtener datos infoRam:', error.message);
@@ -50,9 +61,12 @@ router.get('/infoRam', async (req, res) => {
     }
 });
 
-router.get('/infoCpu', async (req, res) => {
+router.get('/infoCpu/:maquina', async (req, res) => {
+    const maquina = req.params.maquina;
+    const IP_API_GO = await ipServidores[maquina];
+    console.log(`NODE: infoCpu ${maquina} `)
     try {
-        const response = await axios.get(`http://${API_GO_URL}:8080/infoCpu`);
+        const response = await axios.get(`http://${IP_API_GO}:8080/infoCpu`);
         res.json(response.data);
     } catch (error) { 
         console.error('Error al obtener datos infoCpu:', error);
@@ -77,9 +91,12 @@ router.get('/cpu_porcentaje', async (req, res) => {
     }
 });
 
-router.get('/porcentaje_uso_cpu', async (req, res) => {
+router.get('/porcentaje_uso_cpu/:maquina', async (req, res) => {
+    const maquina = req.params.maquina;
+    const IP_API_GO = await ipServidores[maquina];
+    console.log(`NODE: porcentaje_uso_cpu ${maquina} `)
     try {
-        const response = await axios.get(`http://${API_GO_URL}:8080/porcentaje_uso_cpu`);
+        const response = await axios.get(`http://${IP_API_GO}:8080/porcentaje_uso_cpu`);
         res.json(response.data);
     } catch (error) { 
         console.error('Error al obtener datos cpu_porcentaje:', error);
@@ -89,8 +106,11 @@ router.get('/porcentaje_uso_cpu', async (req, res) => {
 
 router.post('/killProcess', async (req, res) => {
     const pid_App = req.body.pid_App;
+    const maquina = req.body.maquina;
+    const IP_API_GO = await ipServidores[maquina];
+    console.log(`NODE: killProcess ${maquina} `)
     try {
-        const response = await axios.post(`http://${API_GO_URL}:8080/killProcess`, { "pid_App": pid_App }, {
+        const response = await axios.post(`http://${IP_API_GO}:8080/killProcess`, { "pid_App": pid_App }, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -106,6 +126,7 @@ router.post('/killProcess', async (req, res) => {
 router.post('/saveHistory', async (req, res) => {
     // console.log(req.body)
     const { ram, cpu, maquina } = req.body;
+    console.log(`NODE: saveHistory ${maquina} `)
 
     try {
         const connection = await connectToDatabase();
@@ -132,6 +153,7 @@ router.post('/saveHistory', async (req, res) => {
 
 router.get('/dataHistory/:maquina', async (req, res) => {
     const maquina = req.params.maquina;
+    console.log(`NODE: dataHistory ${maquina} `)
     try {
         const connection = await connectToDatabase();
 
