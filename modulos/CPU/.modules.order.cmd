@@ -1,1 +1,1 @@
-cmd_/home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/modules.order := {   echo /home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/cpu_201807307.ko; :; } | awk '!x[$$0]++' - > /home/cuches/Documentos/SOPES1/SO1_PROYECTO1_2S2023_201807307/modulos/CPU/modules.order
+cmd_/home/g2994547970101/SO1_PROYECTO1/modulos/CPU/modules.order := {   echo /home/g2994547970101/SO1_PROYECTO1/modulos/CPU/cpu_201807307.ko; :; } | awk '!x[$$0]++' - > /home/g2994547970101/SO1_PROYECTO1/modulos/CPU/modules.order
