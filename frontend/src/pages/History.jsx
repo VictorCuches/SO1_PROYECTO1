@@ -17,6 +17,7 @@ const History = () => {
   const API_NODE_URL = process.env.REACT_APP_API_URL;
 
   const loadDataHistory = async () => {
+    console.log("REACT: loadDataHistory")
     try {
       const response = await fetch(`${API_NODE_URL}/dataHistory/${selectVM}`);
       if (!response.ok) {
@@ -43,6 +44,13 @@ const History = () => {
     }
   }
 
+  const refresh = () => {
+    setFechasHistory([]);
+    setRamHistory([]);
+    setCpuHistory([]);
+    loadDataHistory()
+  };
+
   const handleSelectChange = (event) => {
     const valueSelect = event.target.value;
     setSelectVM(valueSelect);
@@ -58,18 +66,21 @@ const History = () => {
         <div className="card-body">
           <div className="row d-flex justify-content-center">
           <h3>Historial</h3>
-            <div className="col-5 my-2">
+            <div className="col-5 my-2 d-flex align-items-center">
               <Form.Select
                 aria-label="Default select example"
                 onChange={handleSelectChange}
+                className="form-control"
               >
-                <option>Seleccione maquina virtual</option>
                 {listVM.map((item) => (
                   <option key={item.value} value={item.value}>
                     {item.label}
                   </option>
                 ))}
               </Form.Select>
+              <button className="btn btn-primary ml-2" onClick={refresh}>
+                  <i className="bi bi-arrow-clockwise"></i>
+                </button>
             </div>
           </div>
 
