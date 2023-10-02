@@ -18,8 +18,8 @@
 #include <linux/mm.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Victor Cuches");
-MODULE_DESCRIPTION("Proyecto1");
+MODULE_AUTHOR(" ");
+MODULE_DESCRIPTION("Proyecto1 SOPES1");
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,18,0)
 #define HAVE_PROC_CREATE_SINGLE
@@ -187,18 +187,18 @@ static const struct file_operations operaciones =
 static int __init _insert(void)
 {
 #ifdef HAVE_PROC_CREATE_SINGLE
-    proc_create_single("cpu_201807307", 0, NULL, getCpuInfo);
+    proc_create_single("cpu_201901604", 0, NULL, getCpuInfo);
 #else
-    proc_create("cpu_201807307", 0, NULL, &operaciones);
+    proc_create("cpu_201901604", 0, NULL, &operaciones);
 #endif
-    printk(KERN_INFO "Victor Cuches de Leon\n");
+    printk(KERN_INFO " \n");
     return 0;
 }
 
 static void __exit _remove(void)
 {
-    remove_proc_entry("cpu_201807307", NULL);
-    printk(KERN_INFO "Primer Semestre 2023\n");
+    remove_proc_entry("cpu_201901604", NULL);
+    printk(KERN_INFO "Segundo Semestre 2023\n");
 }
 
 module_init(_insert);

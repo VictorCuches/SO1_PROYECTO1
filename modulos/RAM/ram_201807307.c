@@ -16,8 +16,8 @@
 #include <linux/sched.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Victor Cuches");
-MODULE_DESCRIPTION("Proyecto1");
+MODULE_AUTHOR(" ");
+MODULE_DESCRIPTION("Proyecto1 SOPES1");
 
 #if LINUX_VERSION_CODE >= KERNEL_VERSION(4,18,0)
 #define HAVE_PROC_CREATE_SINGLE
@@ -98,17 +98,17 @@ static const struct file_operations operaciones =
 static int __init _insert(void)
 {
 #ifdef HAVE_PROC_CREATE_SINGLE
-    proc_create_single("ram_201807307", 0, NULL, getRamInfo);
+    proc_create_single("ram_201901604", 0, NULL, getRamInfo);
 #else
-    proc_create("ram_201807307", 0, NULL, &operaciones);
+    proc_create("ram_201901604", 0, NULL, &operaciones);
 #endif
-    printk(KERN_INFO "201807307\n");
+    printk(KERN_INFO "201901604\n");
     return 0;
 }
 
 static void __exit _remove(void)
 {
-    remove_proc_entry("ram_201807307", NULL);
+    remove_proc_entry("ram_201901604", NULL);
     printk(KERN_INFO "Sistemas Operativos 1\n");
 }
 
